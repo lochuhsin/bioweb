@@ -29,6 +29,18 @@ npm run dev
 
 文字支援 `**粗體**` 和 `[連結](https://...)`。`/contact` 這種站內連結會留在網站裡切換。
 
+## 預約時間（Contact 頁的 Book a call）
+
+Contact 頁下面可以放一個月曆，訪客自己選時間約 coffee chat 或 meeting。月曆本身是 [Cal.com](https://cal.com) 的服務，免費方案就夠用。
+
+1. 到 cal.com 註冊帳號。
+2. 在 Settings → Calendars 連結你的 Google Calendar。這樣已經有安排的時間會自動擋掉，訪客預約後也會直接出現在你的行事曆上。
+3. 在 Settings → Availability 設定你可以被約的時段和時區。
+4. 在 Event Types 建立兩個活動，例如 `coffee-chat`（30 分鐘）和 `meeting`（45 分鐘），並選好會議連結（Google Meet、Cal Video 或 Zoom）。想先審核再接受的話，可以打開 Requires confirmation。
+5. 把連結填進 `src/content.ts` 的 `booking.events`，只要填網域後面的部分，例如 `your-username/coffee-chat`。
+
+`calLink` 留空的活動不會顯示。兩個都留空時，正式網站上不會出現這個區塊，`npm run dev` 時則會顯示這段設定說明。網站切換亮暗主題時，月曆也會跟著換。
+
 ## 檔案結構
 
 ```

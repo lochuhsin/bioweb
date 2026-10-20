@@ -5,6 +5,7 @@ import './styles.css';
 
 import { hydrateAscii } from './ascii';
 import { runBoot } from './boot';
+import { mountBooking, setBookingTheme } from './booking';
 import { contact, nodes, site, type SectionId } from './content';
 import { escapeHtml, linkAttrs } from './html';
 import { icon } from './icons';
@@ -80,6 +81,7 @@ themeButton.addEventListener('click', async () => {
     logo.setColor(fg);
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeVar('--bg'));
     panel.querySelectorAll<HTMLElement>('figure.ascii').forEach((fig) => hydrateAscii(fig, { invert: next === 'light', animate: false }));
+    setBookingTheme(next);
     renderThemeLabel(true);
   });
   switching = false;
@@ -133,6 +135,7 @@ function showPanel(id: SectionId, title: string, animate: boolean) {
   }
   const invert = currentTheme() === 'light';
   panel.querySelectorAll<HTMLElement>('figure.ascii').forEach((fig) => hydrateAscii(fig, { invert, animate: animate && !reduced }));
+  if (id === 'contact') mountBooking(panel, currentTheme());
 }
 
 function hidePanel() {

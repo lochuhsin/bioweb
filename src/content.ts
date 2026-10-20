@@ -166,3 +166,32 @@ export const contact = {
     { label: 'LinkedIn', value: 'linkedin.com/in/you', href: 'https://www.linkedin.com/' },
   ],
 };
+
+// --- Booking (on the contact page) ------------------------------------------
+
+export interface BookingEvent {
+  label: string;
+  duration: string;
+  /**
+   * Your Cal.com link without the domain, e.g. 'your-username/coffee-chat'.
+   * Leave it empty and the event is skipped.
+   */
+  calLink: string;
+}
+
+/**
+ * A Cal.com calendar where visitors pick a time themselves.
+ * Until at least one calLink is filled in, the section is hidden on the live site
+ * and shows setup notes during `npm run dev`.
+ */
+export const booking = {
+  title: 'Book a call',
+  note: 'Pick a time that works for you. You will get a calendar invite with a video link.',
+  events: [
+    { label: 'Coffee chat or meeting', duration: '30 min', calLink: 'albert-lo-lkzaub/contact' },
+    // Add another Cal.com event type and the card shows tabs to switch between them, e.g.
+    // { label: 'Meeting', duration: '45 min', calLink: 'albert-lo-lkzaub/meeting' },
+  ] satisfies BookingEvent[],
+  /** Change only if you self-host Cal.com. */
+  origin: 'https://app.cal.com',
+};

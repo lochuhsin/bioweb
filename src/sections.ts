@@ -1,6 +1,7 @@
 // HTML for each section page. The words come from content.ts; this file only decides the layout.
 
-import { about, contact, cv, experience, projects, type Entry, type Role, type SectionId } from './content';
+import { bookingEvents } from './booking';
+import { about, booking, contact, cv, experience, projects, type Entry, type Role, type SectionId } from './content';
 import { escapeHtml, inline, linkAttrs } from './html';
 import { icon } from './icons';
 
@@ -108,7 +109,66 @@ function contactPage(): string {
       </li>`,
     )
     .join('');
-  return `<p class="lead">${inline(contact.intro)}</p><ul class="row-list">${rows}</ul>`;
+  return `<p class="lead">${inline(contact.intro)}</p><ul class="row-list">${rows}</ul>${bookingCard()}`;
+}
+
+/** The calendar card; booking.ts loads Cal.com into each .booking-frame. */
+function bookingCard(): string {
+  const events = bookingEvents();
+  const head = (extra: string) => `
+    <div class="booking-head">
+      <div>
+        <h2 class="booking-title" id="booking-title">${escapeHtml(booking.title)}</h2>
+        <p class="booking-note">${inline(booking.note)}</p>
+      </div>
+      ${extra}
+    </div>`;
+
+  if (events.length === 0) {
+    // Nothing to book yet: say how to connect it during development, show nothing on the live site.
+    if (!import.meta.env.DEV) return '';
+    return `
+      <section class="booking" aria-labelledby="booking-title">
+        <div class="booking-card">
+          ${head('')}
+          <div class="booking-setup">
+            <p class="kicker">Not connected yet · only visible in dev</p>
+            <p>Create a free Cal.com account, add event types such as a 30 min coffee chat, then put their links in <code>booking.events</code> in <code>src/content.ts</code>.</p>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const many = events.length > 1;
+  const tabs = many
+    ? `<div class="booking-tabs" role="tablist" aria-label="Meeting type">${events
+        .map(
+          (e, i) => `
+          <button class="booking-tab" type="button" role="tab" id="booking-tab-${i}" aria-controls="booking-panel-${i}" aria-selected="${i === 0}" data-booking-tab="${i}">
+            <span>${escapeHtml(e.label)}</span><span class="booking-duration">${escapeHtml(e.duration)}</span>
+          </button>`,
+        )
+        .join('')}</div>`
+    : `<p class="booking-single">${escapeHtml(events[0].label)} · ${escapeHtml(events[0].duration)}</p>`;
+
+  const panels = events
+    .map(
+      (e, i) => `
+      <div class="booking-panel" id="booking-panel-${i}" data-booking-panel="${i}"${many ? ` role="tabpanel" aria-labelledby="booking-tab-${i}"` : ''}${i === 0 ? '' : ' hidden'}>
+        <p class="booking-status booking-loading">Loading calendar…</p>
+        <p class="booking-status booking-error">The calendar did not load. <a ${linkAttrs(`${booking.origin}/${e.calLink}`)}>Open it on Cal.com</a>.</p>
+        <div class="booking-frame"></div>
+      </div>`,
+    )
+    .join('');
+
+  return `
+    <section class="booking" aria-labelledby="booking-title">
+      <div class="booking-card">
+        ${head(tabs)}
+        <div class="booking-body">${panels}</div>
+      </div>
+    </section>`;
 }
 
 const pages: Record<SectionId, () => string> = {

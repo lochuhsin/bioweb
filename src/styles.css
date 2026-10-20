@@ -738,6 +738,148 @@ body.has-section .footer > * {
   transform: translate(3px, -3px);
 }
 
+/* Booking calendar (booking.ts). The calendar inside is Cal.com's; this is the frame around it. */
+.booking {
+  margin-top: 56px;
+}
+
+.booking-card {
+  border: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.booking-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.booking-title {
+  margin: 0;
+  font: 600 25px/1.15 var(--font-display);
+  letter-spacing: 0.005em;
+}
+
+.section-body .booking-note {
+  max-width: 420px;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.booking-tabs {
+  display: flex;
+  border: 1px solid var(--line);
+}
+
+.booking-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 9px 14px;
+  color: var(--muted);
+  font: 500 10px/1.3 var(--font-mono);
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-transform: uppercase;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.booking-tab + .booking-tab {
+  border-left: 1px solid var(--line);
+}
+
+.booking-tab:hover {
+  color: var(--fg);
+}
+
+.booking-tab[aria-selected='true'] {
+  background: var(--button-bg);
+  color: var(--button-fg);
+}
+
+.booking-tab:focus-visible {
+  outline-offset: -4px;
+}
+
+.booking-duration {
+  opacity: 0.65;
+}
+
+.section-body .booking-single {
+  margin: 0;
+  color: var(--muted);
+  font: 500 10px/1.55 var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.booking-body {
+  padding: 16px;
+}
+
+.booking-panel {
+  position: relative;
+  min-height: 440px;
+}
+
+.section-body .booking-status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--muted);
+  font: 400 10px/1.5 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.section-body .booking-error {
+  display: none;
+  font: 400 14px/1.5 var(--font-body);
+  letter-spacing: 0;
+  text-transform: none;
+  pointer-events: auto;
+}
+
+.booking-panel.is-ready .booking-loading,
+.booking-panel.is-failed .booking-loading {
+  display: none;
+}
+
+.booking-panel.is-failed .booking-error {
+  display: grid;
+}
+
+.booking-frame {
+  position: relative;
+}
+
+.booking-setup {
+  padding: 22px 24px 4px;
+}
+
+.booking-setup .kicker {
+  margin-bottom: 10px;
+  color: var(--muted);
+}
+
+.section-body code {
+  padding: 1px 5px;
+  border: 1px solid var(--line);
+  font: 400 0.85em var(--font-mono);
+}
+
 /* --- boot screen and theme wipe -------------------------------------------- */
 
 .boot {
@@ -853,6 +995,22 @@ body.has-section .footer > * {
 
   .section-body .row-name {
     font-size: 21px;
+  }
+
+  .booking-head {
+    padding: 18px 16px;
+  }
+
+  .booking-tabs {
+    width: 100%;
+  }
+
+  .booking-tab {
+    flex: 1;
+  }
+
+  .booking-body {
+    padding: 8px;
   }
 }
 
