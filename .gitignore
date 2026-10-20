@@ -3,3 +3,6 @@ dist
 .DS_Store
 *.local
 .vercel
+
+# Source photos for the ASCII portrait; only the generated text is published
+private/

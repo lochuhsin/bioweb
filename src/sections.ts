@@ -6,25 +6,37 @@ import { escapeHtml, inline, linkAttrs } from './html';
 import { icon } from './icons';
 
 interface AsciiFigure {
+  /** An image converted in the browser. */
   src?: string;
+  /** A few letters drawn as ASCII (logo fallback). */
   text?: string;
-  cols: number;
+  /** Art generated ahead of time (src/portrait-ascii.ts); it knows its own size. */
+  art?: 'portrait';
+  cols?: number;
   mode: 'luma' | 'alpha';
   className: string;
   label?: string;
 }
 
 function asciiFigure(f: AsciiFigure): string {
-  const source = f.src ? `data-src="${escapeHtml(f.src)}"` : `data-text="${escapeHtml(f.text ?? '')}"`;
+  const source = f.art
+    ? `data-art="${f.art}"`
+    : f.src
+      ? `data-src="${escapeHtml(f.src)}"`
+      : `data-text="${escapeHtml(f.text ?? '')}"`;
+  const size = f.cols ? ` data-cols="${f.cols}" style="--cols:${f.cols}"` : '';
   const a11y = f.label ? `role="img" aria-label="${escapeHtml(f.label)}"` : 'aria-hidden="true"';
-  return `<figure class="ascii ${f.className}" ${source} data-cols="${f.cols}" data-mode="${f.mode}" style="--cols:${f.cols}" ${a11y}><pre class="ascii-art"></pre></figure>`;
+  return `<figure class="ascii ${f.className}" ${source}${size} data-mode="${f.mode}" ${a11y}><pre class="ascii-art"></pre></figure>`;
 }
 
 function aboutPage(): string {
+  const portrait = about.portrait
+    ? `<div class="about-portrait">${asciiFigure({ art: 'portrait', mode: 'luma', className: 'portrait', label: 'Portrait drawn in ASCII characters' })}</div>`
+    : '';
   return `
     <div class="about-grid">
       <div class="about-text">${about.paragraphs.map((p) => `<p>${inline(p)}</p>`).join('')}</div>
-      <div class="about-portrait">${asciiFigure({ ...about.portrait, mode: 'luma', className: 'portrait', label: 'Portrait drawn in ASCII characters' })}</div>
+      ${portrait}
     </div>`;
 }
 

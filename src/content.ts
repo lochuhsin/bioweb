@@ -45,10 +45,11 @@ export const about = {
     'Have a system that needs to handle more than anyone thinks it can? [Let’s talk](/contact).',
   ],
   /**
-   * Turned into ASCII art in the browser. A photo with the background removed looks best
-   * (a transparent PNG). Put the file in public/ and point to it here, e.g. '/portrait.png'.
+   * Shows the ASCII portrait from src/portrait-ascii.ts. Only that text is published, never the photo.
+   * To change it: put a background-removed PNG in private/ (git ignores that folder), then run
+   * `npm run portrait -- private/your-photo.png 110` (the number is the width in characters).
    */
-  portrait: { src: '/portrait.png', cols: 110 },
+  portrait: true,
 };
 
 // --- Experience ------------------------------------------------------------
@@ -179,8 +180,15 @@ export const experience: ExperienceGroup[] = [
   },
   {
     title: 'Side projects',
-    // PR-KV and PR-CONCURRENCY in resume.yaml; lolang from its README.
+    // PR-MATCH, PR-KV and PR-CONCURRENCY in resume.yaml; lolang from its README.
+    // hypermatch's README latency numbers are targets, not measurements: don't print them until measured.
     projects: [
+      {
+        name: 'hypermatch',
+        meta: 'Rust · in progress',
+        description: 'An exchange’s order-entry hot path, from the wire to the fill: a single-writer matching core in the LMAX Disruptor style, lock-free ring buffers between threads, io_uring ingress and an append-only journal for deterministic replay.',
+        url: 'https://github.com/lochuhsin/hypermatch',
+      },
       {
         name: 'lolang',
         meta: 'Rust',

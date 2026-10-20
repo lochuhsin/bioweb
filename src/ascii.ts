@@ -147,6 +147,17 @@ export async function hydrateAscii(fig: HTMLElement, opts: { invert: boolean; an
   const cols = Number(fig.dataset.cols) || 64;
   const mode: AsciiMode = fig.dataset.mode === 'alpha' ? 'alpha' : 'luma';
   try {
+    if (fig.dataset.art === 'portrait') {
+      // Generated ahead of time by scripts/portrait.mjs; loaded only when the about page opens.
+      const { portrait } = await import('./portrait-ascii');
+      fig.style.setProperty('--cols', String(portrait.cols));
+      fig.style.setProperty('--rows', String(portrait.rows));
+      fig.style.setProperty('--ratio', String((2 * portrait.rows) / portrait.cols));
+      const text = opts.invert ? portrait.light : portrait.dark;
+      if (opts.animate) reveal(pre, text);
+      else pre.textContent = text;
+      return;
+    }
     const grid = fig.dataset.src ? await loadImageGrid(fig.dataset.src, cols) : await textGrid(fig.dataset.text ?? '?', cols);
     fig.style.setProperty('--rows', String(grid.rows));
     // Height / width of the rendered art: rows of 1.2em over columns of 0.6em.
