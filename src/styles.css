@@ -598,6 +598,14 @@ body.has-section .footer > * {
   letter-spacing: 0.005em;
 }
 
+.section-body .entry-about {
+  max-width: 560px;
+  margin: -12px 0 24px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
 .section-body .entry-name a {
   text-decoration: none;
 }
@@ -677,6 +685,12 @@ body.has-section .footer > * {
   padding: 0;
   border-top: 1px solid var(--line);
   list-style: none;
+}
+
+/* Right under the page header, whose own bottom line already separates it. */
+.section-body > .row-list:first-child {
+  margin-top: -20px;
+  border-top: 0;
 }
 
 .section-body .row {
@@ -950,6 +964,11 @@ body.has-section .footer > * {
 
   .chrome {
     top: 18px;
+  }
+
+  /* Keep a long name clear of the theme toggle; it wraps instead on very narrow phones. */
+  .chrome-copy {
+    max-width: calc(100vw - var(--edge) - 48px - 92px);
   }
 
   .section {

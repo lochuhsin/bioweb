@@ -64,6 +64,7 @@ function entry(e: Entry): string {
       ${logoBox}
       <div class="entry-main">
         <h3 class="entry-name">${name}</h3>
+        ${e.about ? `<p class="entry-about">${inline(e.about)}</p>` : ''}
         ${e.roles.map(role).join('')}
       </div>
     </article>`;
