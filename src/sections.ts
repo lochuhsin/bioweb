@@ -1,7 +1,7 @@
 // HTML for each section page. The words come from content.ts; this file only decides the layout.
 
 import { bookingEvents } from './booking';
-import { about, booking, contact, cv, experience, projects, type Entry, type Role, type SectionId } from './content';
+import { about, booking, contact, cv, experience, type Entry, type Project, type Role, type SectionId } from './content';
 import { escapeHtml, inline, linkAttrs } from './html';
 import { icon } from './icons';
 
@@ -72,12 +72,15 @@ function entry(e: Entry): string {
 
 function experiencePage(): string {
   const groups = experience
-    .map((g) => `<section class="group"><h2 class="group-title">${escapeHtml(g.title)}</h2>${g.entries.map(entry).join('')}</section>`)
+    .map((g) => {
+      const body = 'entries' in g ? g.entries.map(entry).join('') : projectList(g.projects);
+      return `<section class="group"><h2 class="group-title">${escapeHtml(g.title)}</h2>${body}</section>`;
+    })
     .join('');
   return cvRow() + groups;
 }
 
-function projectsPage(): string {
+function projectList(projects: Project[]): string {
   const rows = projects
     .map(
       (p) => `
@@ -175,7 +178,6 @@ function bookingCard(): string {
 const pages: Record<SectionId, () => string> = {
   about: aboutPage,
   experience: experiencePage,
-  projects: projectsPage,
   contact: contactPage,
 };
 

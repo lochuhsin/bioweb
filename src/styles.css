@@ -508,21 +508,32 @@ body.has-section .footer > * {
 }
 
 /* About */
+/* The about page is meant to fit on one screen without scrolling. */
+.section--about {
+  padding-bottom: 40px;
+}
+
 .about-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   gap: clamp(32px, 7vw, 64px);
-  align-items: start;
+  align-items: center;
 }
 
 .about-text {
   max-width: 460px;
 }
 
-.about-portrait {
-  width: 100%;
-  max-width: 400px;
-  justify-self: end;
+.section-body .about-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* Right-aligned, and shrinks with the window height so it never forces a scroll.
+   --ratio (height / width) is set by ascii.ts once the image is converted. */
+.portrait {
+  width: min(100%, 380px, calc((100vh - 380px) / var(--ratio, 1.5)));
+  width: min(100%, 380px, calc((100svh - 380px) / var(--ratio, 1.5)));
+  margin-left: auto;
 }
 
 /* Experience */
@@ -984,9 +995,9 @@ body.has-section .footer > * {
     grid-template-columns: 1fr;
   }
 
-  .about-portrait {
-    max-width: 320px;
-    justify-self: start;
+  .portrait {
+    width: min(100%, 300px);
+    margin-left: 0;
   }
 
   .entry {

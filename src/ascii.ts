@@ -81,12 +81,30 @@ async function textGrid(text: string, cols: number): Promise<Grid> {
 function toText(grid: Grid, mode: AsciiMode, invert: boolean): string {
   const { cols, rows, luma, alpha } = grid;
   const steps = RAMP.length - 1;
+  // A photo with its background removed: give the subject a faint minimum density, so dark hair
+  // and clothes still show their outline instead of fading into the page.
+  const cutout = mode === 'luma' && alpha.some((a) => a < 0.5);
+  const floor = cutout ? 0.16 : 0;
+  // Stretch the subject's own brightness range over the whole ramp, so a face keeps its features.
+  let lo = 0;
+  let hi = 1;
+  if (cutout) {
+    const subject = Array.from(luma)
+      .filter((_, i) => alpha[i] > 0.5)
+      .sort((a, b) => a - b);
+    if (subject.length > 10) {
+      lo = subject[Math.floor(subject.length * 0.05)];
+      hi = Math.max(lo + 0.05, subject[Math.floor(subject.length * 0.98)]);
+    }
+  }
   const lines: string[] = [];
   for (let y = 0; y < rows; y++) {
     let line = '';
     for (let x = 0; x < cols; x++) {
       const i = y * cols + x;
-      let d = mode === 'alpha' ? alpha[i] : alpha[i] * (invert ? 1 - luma[i] : luma[i]);
+      const level = Math.min(1, Math.max(0, (luma[i] - lo) / (hi - lo)));
+      const tone = invert ? 1 - level : level;
+      let d = mode === 'alpha' ? alpha[i] : alpha[i] * (floor + (1 - floor) * tone);
       d = Math.min(1, Math.max(0, (d - 0.5) * 1.12 + 0.5)) ** 0.95;
       line += RAMP[Math.round(d * steps)];
     }
@@ -131,6 +149,8 @@ export async function hydrateAscii(fig: HTMLElement, opts: { invert: boolean; an
   try {
     const grid = fig.dataset.src ? await loadImageGrid(fig.dataset.src, cols) : await textGrid(fig.dataset.text ?? '?', cols);
     fig.style.setProperty('--rows', String(grid.rows));
+    // Height / width of the rendered art: rows of 1.2em over columns of 0.6em.
+    fig.style.setProperty('--ratio', String((2 * grid.rows) / grid.cols));
     const text = toText(grid, mode, opts.invert && mode === 'luma');
     if (opts.animate) reveal(pre, text);
     else pre.textContent = text;

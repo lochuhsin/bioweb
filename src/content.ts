@@ -5,7 +5,7 @@
 // Links that start with "/" (for example [contact](/contact)) stay inside the site.
 // ---------------------------------------------------------------------------
 
-export type SectionId = 'about' | 'experience' | 'projects' | 'contact';
+export type SectionId = 'about' | 'experience' | 'contact';
 
 export const site = {
   name: 'Chu-Hsin (Albert) Lo',
@@ -29,26 +29,26 @@ export interface WorldNode {
 
 /** The clouds on the home screen. Remove one here and its page disappears too. */
 export const nodes: WorldNode[] = [
-  { id: 'about', label: 'About', position: [0.06, 0.08] },
-  { id: 'experience', label: 'Experience', position: [0.46, 0.55] },
-  { id: 'projects', label: 'Projects', position: [0.94, 0.14] },
-  { id: 'contact', label: 'Contact', position: [0.8, 0.98] },
+  { id: 'about', label: 'About', position: [0.08, 0.1] },
+  { id: 'experience', label: 'Experience', position: [0.92, 0.32] },
+  { id: 'contact', label: 'Contact', position: [0.36, 0.95] },
 ];
 
 // --- About -----------------------------------------------------------------
 
 export const about = {
+  // How you think as an engineer, in your own voice. Keep it short enough to fit on one screen.
   paragraphs: [
-    'One or two sentences on **what you do** and where you are based.',
-    'What you are working on now, and the kind of problems you like to solve.',
-    'Where you worked before, and the one thing you are proudest of there.',
-    'Something outside work that says how you think. Want to talk? [Get in touch](/contact).',
+    'I’m a software engineer who is happiest when a system is under pressure. My field is **performance and reliability for high-throughput, event-driven systems**, where every queue, batch and lock matters, and sometimes every microsecond.',
+    'I’m drawn to problems that look impossible at first. When a system supposedly can’t take more load, that’s where I want to start: push it until I know exactly where and why it breaks, then engineer it past that point.',
+    'I measure before I guess, and I’m not done until I understand why something is fast, not just that it is. When in doubt, I go back to first principles and build it myself.',
+    'Have a system that needs to handle more than anyone thinks it can? [Let’s talk](/contact).',
   ],
   /**
    * Turned into ASCII art in the browser. A photo with the background removed looks best
    * (a transparent PNG). Put the file in public/ and point to it here, e.g. '/portrait.png'.
    */
-  portrait: { src: '/portrait.svg', cols: 96 },
+  portrait: { src: '/portrait.png', cols: 110 },
 };
 
 // --- Experience ------------------------------------------------------------
@@ -72,6 +72,16 @@ export interface Entry {
   roles: Role[];
 }
 
+export interface Project {
+  name: string;
+  meta: string;
+  description: string;
+  url: string;
+}
+
+/** A group on the experience page: jobs and schools (entries), or a list of projects. */
+export type ExperienceGroup = { title: string; entries: Entry[] } | { title: string; projects: Project[] };
+
 /**
  * Put your PDF at public/cv.pdf and set this to { href: '/cv.pdf', note: '...' } to show the row.
  * Hidden for now: the built resumes still have open placeholders and a phone-number slot.
@@ -80,7 +90,8 @@ export const cv: { href: string; note: string } | null = null;
 
 // Every highlight below comes from ~/Desktop/Career/resume-system/resume.yaml (bullet ID in the comment),
 // which in turn traces to history/ and profile/. Change the facts there first, then here.
-export const experience: { title: string; entries: Entry[] }[] = [
+// Groups are shown in this order.
+export const experience: ExperienceGroup[] = [
   {
     title: 'Work',
     entries: [
@@ -167,6 +178,30 @@ export const experience: { title: string; entries: Entry[] }[] = [
     ],
   },
   {
+    title: 'Side projects',
+    // PR-KV and PR-CONCURRENCY in resume.yaml; lolang from its README.
+    projects: [
+      {
+        name: 'lolang',
+        meta: 'Rust',
+        description: 'A small Lox-flavored programming language built from scratch: a single-pass bytecode compiler feeding a stack-based virtual machine, with a REPL.',
+        url: 'https://github.com/lochuhsin/lolang',
+      },
+      {
+        name: 'rebitcask',
+        meta: 'Go',
+        description: 'A Bitcask-inspired key-value store with an LSM-tree engine (memtables, asynchronous SSTable flushing, per-segment indexes), served over HTTP and gRPC. A Raft cluster layer is in progress.',
+        url: 'https://github.com/lochuhsin/bitcask',
+      },
+      {
+        name: 'gopher-forge',
+        meta: 'Go',
+        description: 'Synchronization primitives rebuilt from first principles: spin, ticket and MCS locks, semaphores, lock-free variants and memory reclamation, each with concurrent tests and benchmarks.',
+        url: 'https://github.com/lochuhsin/gopher-forge',
+      },
+    ],
+  },
+  {
     title: 'Education',
     entries: [
       {
@@ -188,29 +223,6 @@ export const experience: { title: string; entries: Entry[] }[] = [
         roles: [{ title: 'B.Sc. in Physics', period: 'Until Jun 2017', highlights: [] }],
       },
     ],
-  },
-];
-
-// --- Projects --------------------------------------------------------------
-
-export const projects: { name: string; meta: string; description: string; url: string }[] = [
-  {
-    name: 'lolang',
-    meta: 'Rust',
-    description: 'A small Lox-flavored programming language built from scratch: a single-pass bytecode compiler feeding a stack-based virtual machine, with a REPL.',
-    url: 'https://github.com/lochuhsin/lolang',
-  },
-  {
-    name: 'rebitcask',
-    meta: 'Go',
-    description: 'A Bitcask-inspired key-value store with an LSM-tree engine (memtables, asynchronous SSTable flushing, per-segment indexes), served over HTTP and gRPC. A Raft cluster layer is in progress.',
-    url: 'https://github.com/lochuhsin/bitcask',
-  },
-  {
-    name: 'gopher-forge',
-    meta: 'Go',
-    description: 'Synchronization primitives rebuilt from first principles: spin, ticket and MCS locks, semaphores, lock-free variants and memory reclamation, each with concurrent tests and benchmarks.',
-    url: 'https://github.com/lochuhsin/gopher-forge',
   },
 ];
 
