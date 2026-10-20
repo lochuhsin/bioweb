@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Name</title>
+    <meta name="description" content="Software engineer. Replace this with one sentence about you." />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!--
+      Link previews: add a 1200x630 image at public/social-card.jpg, set your domain, then uncomment.
+      <meta property="og:title" content="Your Name" />
+      <meta property="og:description" content="Software engineer." />
+      <meta property="og:image" content="https://your-domain.com/social-card.jpg" />
+      <meta name="twitter:card" content="summary_large_image" />
+    -->
+    <script>
+      // Apply the saved theme before the first paint so the page never flashes the wrong colors.
+      try {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div class="app">
+      <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">Pause ambient motion</button>
+
+      <div class="world" id="world">
+        <canvas class="world-canvas" id="world-canvas" aria-hidden="true"></canvas>
+        <nav class="node-layer" id="nodes" aria-label="Sections"></nav>
+      </div>
+
+      <header class="chrome" id="chrome">
+        <a class="chrome-home" href="/" data-link aria-label="Home">
+          <canvas class="chrome-logo" id="logo" aria-hidden="true"></canvas>
+        </a>
+        <div class="chrome-copy">
+          <p class="chrome-name" id="chrome-name"></p>
+          <p class="chrome-role" id="chrome-role"></p>
+        </div>
+      </header>
+
+      <button class="theme-toggle" id="theme-toggle" type="button"></button>
+
+      <main class="panel" id="panel" hidden></main>
+
+      <footer class="footer" id="footer">
+        <small class="footer-version" id="version"></small>
+        <div class="footer-menu" id="footer-menu">
+          <ul class="footer-links" id="footer-links"></ul>
+          <button class="footer-toggle" id="footer-toggle" type="button" aria-expanded="false" aria-controls="footer-links" aria-label="Show links"></button>
+        </div>
+      </footer>
+    </div>
+
+    <div class="boot" id="boot" hidden aria-hidden="true">
+      <pre class="boot-art" id="boot-art"></pre>
+      <p class="boot-label">Initializing<span class="boot-dots" id="boot-dots"></span></p>
+    </div>
+    <canvas class="theme-wipe" id="theme-wipe" aria-hidden="true"></canvas>
+
+    <noscript><p class="noscript">This site draws its world with JavaScript. Please turn it on.</p></noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
