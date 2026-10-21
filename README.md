@@ -23,7 +23,6 @@ npm run dev
 | 頭像 | 照片放進 `public/`（去背的 PNG 最好看），再改 `about.portrait.src` |
 | 公司 logo | 放進 `public/logos/`，在經歷裡加 `logo: '/logos/xxx.svg'`。沒放的話，會把縮寫畫成 ASCII |
 | 履歷 PDF | 放到 `public/cv.pdf`。不想顯示這一列，就把 `cv` 設成 `null` |
-| 左上角的小地球 | `src/logo.ts`，或在 `index.html` 換成自己的 `<img>` |
 | 網頁標題、搜尋描述、分享預覽圖 | `index.html` 的 `<head>` |
 | 圖示 | `src/icons.ts`，用 `#` 直接畫 16×16 的像素圖 |
 
@@ -59,7 +58,6 @@ src/
   ascii.ts     把圖片或文字轉成 ASCII
   scramble.ts  文字從亂碼組合出來的效果
   theme.ts     亮暗主題和像素換場
-  logo.ts      左上角的小地球
   icons.ts     像素圖示
   styles.css   所有樣式
 ```

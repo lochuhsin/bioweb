@@ -9,7 +9,6 @@ import { mountBooking, setBookingTheme } from './booking';
 import { contact, nodes, site, type SectionId } from './content';
 import { escapeHtml, linkAttrs } from './html';
 import { icon } from './icons';
-import { startLogo } from './logo';
 import { scrambleText, setScrambleReducedMotion } from './scramble';
 import { renderSection } from './sections';
 import { currentTheme, switchTheme, themeVar } from './theme';
@@ -43,8 +42,6 @@ const world = new World({
   color: themeVar('--fg'),
 });
 world.setReducedMotion(reduced);
-const logo = startLogo(byId<HTMLCanvasElement>('logo'), themeVar('--fg'));
-logo.setPaused(reduced);
 
 // --- chrome ----------------------------------------------------------------
 
@@ -78,7 +75,6 @@ themeButton.addEventListener('click', async () => {
   await switchTheme(next, byId<HTMLCanvasElement>('theme-wipe'), !reduced, () => {
     const fg = themeVar('--fg');
     world.setColor(fg);
-    logo.setColor(fg);
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeVar('--bg'));
     panel.querySelectorAll<HTMLElement>('figure.ascii').forEach((fig) => hydrateAscii(fig, { invert: next === 'light', animate: false }));
     setBookingTheme(next);
@@ -91,7 +87,6 @@ function applyMotion() {
   const still = reduced || paused;
   world.setPaused(paused);
   world.setReducedMotion(reduced);
-  logo.setPaused(still);
   setScrambleReducedMotion(reduced);
   document.documentElement.classList.toggle('is-still', still);
   motionButton.textContent = paused ? 'Resume ambient motion' : 'Pause ambient motion';

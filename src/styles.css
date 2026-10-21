@@ -219,13 +219,6 @@ button {
   transition: opacity 0.5s var(--ease);
 }
 
-.chrome-home,
-.chrome-logo {
-  display: block;
-  width: 36px;
-  height: 36px;
-}
-
 .chrome-name {
   margin: 0;
   font: 600 20px/1.15 var(--font-display);
@@ -979,7 +972,7 @@ body.has-section .footer > * {
 
   /* Keep a long name clear of the theme toggle; it wraps instead on very narrow phones. */
   .chrome-copy {
-    max-width: calc(100vw - var(--edge) - 48px - 92px);
+    max-width: calc(100vw - var(--edge) - 92px);
   }
 
   .section {

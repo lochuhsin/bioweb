@@ -104,8 +104,21 @@ interface Link {
   a: Cloud;
   b: Cloud;
   bend: number;
+  /** Brightness of this strand; the main strand of a pair is 1, the side strands fainter. */
+  weight: number;
   packets: { t: number; speed: number; ch: string }[];
 }
+
+/**
+ * Every pair of linked clouds gets a bundle of arcs: [extra bend, brightness, packets of 0/1 in flight].
+ * Add or remove rows for a denser or sparser network.
+ */
+const STRANDS: [number, number, number][] = [
+  [0, 1, 3],
+  [0.12, 0.6, 2],
+  [-0.1, 0.5, 2],
+  [0.24, 0.32, 1],
+];
 
 interface Camera {
   x: number;
@@ -394,17 +407,22 @@ export class World {
       for (const b of nearest) {
         const key = a.index < b.index ? `${a.index}-${b.index}` : `${b.index}-${a.index}`;
         if (seen.has(key)) continue;
+        // Alternate which side each bundle bows towards, so neighbouring bundles don't overlap.
+        const side = seen.size % 2 ? 1 : -1;
         seen.add(key);
-        links.push({
-          a,
-          b,
-          bend: (links.length % 2 ? 1 : -1) * 0.14,
-          packets: Array.from({ length: 2 }, () => ({
-            t: Math.random(),
-            speed: rand(0.05, 0.12) * (Math.random() < 0.5 ? 1 : -1),
-            ch: pick(BITS),
-          })),
-        });
+        for (const [extra, weight, packets] of STRANDS) {
+          links.push({
+            a,
+            b,
+            bend: side * (0.14 + extra),
+            weight,
+            packets: Array.from({ length: packets }, () => ({
+              t: Math.random(),
+              speed: rand(0.05, 0.14) * (Math.random() < 0.5 ? 1 : -1),
+              ch: pick(BITS),
+            })),
+          });
+        }
       }
     }
     return links;
@@ -605,10 +623,10 @@ export class World {
     for (let i = 0; i <= count; i++) {
       const t = t0 + ((t1 - t0) * i) / count;
       const shimmer = 0.75 + 0.25 * Math.sin(i * 0.9 - this.time * 2.4);
-      ctx.globalAlpha = (0.14 + 0.32 * glow) * shimmer * fade;
+      ctx.globalAlpha = (0.16 + 0.32 * glow) * shimmer * fade * l.weight;
       atlas.draw(ctx, DOT, quad(ax, cx, bx, t), quad(ay, cy, by, t), 12);
     }
-    ctx.globalAlpha = (0.45 + 0.4 * glow) * fade;
+    ctx.globalAlpha = (0.45 + 0.4 * glow) * fade * Math.max(0.55, l.weight);
     for (const pk of l.packets) {
       const t = t0 + (t1 - t0) * pk.t;
       atlas.draw(ctx, pk.ch, quad(ax, cx, bx, t), quad(ay, cy, by, t), 10);
