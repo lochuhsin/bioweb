@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Social card</title>
+    <!--
+      The 1200x630 preview image LinkedIn and others show for the site.
+      Edit this page, then regenerate public/social-card.png with:  npm run social-card
+      (needs `npm run dev` running and Google Chrome installed). Not part of the built site.
+    -->
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #000; color: #f2f2f2; }
+      body { position: relative; -webkit-font-smoothing: antialiased; }
+      canvas { position: absolute; inset: 0; }
+      .copy {
+        position: absolute; left: 76px; top: 0; bottom: 0; width: 640px;
+        display: flex; flex-direction: column; justify-content: center;
+      }
+      .kicker { margin: 0 0 26px; color: #8a8a8a; font: 500 17px/1 'JetBrains Mono Variable', monospace; letter-spacing: 0.16em; text-transform: uppercase; }
+      .name { margin: 0; font: 600 58px/1.05 'Work Sans Variable', sans-serif; letter-spacing: 0.002em; }
+      .rule { width: 100%; height: 1px; margin: 34px 0 30px; background: rgb(255 255 255 / 0.16); }
+      .field { margin: 0; max-width: 600px; font: 400 29px/1.35 'Instrument Sans Variable', sans-serif; }
+      .field strong { font-weight: 600; }
+      .nav { margin: 40px 0 0; color: #8a8a8a; font: 500 15px/1 'JetBrains Mono Variable', monospace; letter-spacing: 0.16em; text-transform: uppercase; }
+      .portrait {
+        position: absolute; right: 64px; top: 50%; transform: translateY(-50%);
+        margin: 0; white-space: pre; font: 500 5.5px/1.2 'JetBrains Mono Variable', monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="glyphs" width="1200" height="630"></canvas>
+    <div class="copy">
+      <p class="kicker">Software engineer</p>
+      <h1 class="name">Chu-Hsin (Albert) Lo</h1>
+      <div class="rule"></div>
+      <p class="field">Performance and reliability for <strong>high&#8209;throughput, event&#8209;driven systems</strong>.</p>
+      <p class="nav">[about] &nbsp;[experience] &nbsp;[contact]</p>
+    </div>
+    <pre class="portrait" id="portrait" aria-hidden="true"></pre>
+
+    <script type="module">
+      import '@fontsource-variable/jetbrains-mono';
+      import '@fontsource-variable/work-sans';
+      import '@fontsource-variable/instrument-sans';
+      import { portrait } from './src/portrait-ascii.ts';
+
+      document.getElementById('portrait').textContent = portrait.dark;
+
+      // A faint field of glyphs behind everything, the same texture as the site's world.
+      // Seeded, so the card looks the same every time it is regenerated.
+      let seed = 7;
+      const random = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+      const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&*+=-~<>/\\|[]{}()?!;:^@';
+      await document.fonts.load('500 16px "JetBrains Mono Variable"');
+      const ctx = document.getElementById('glyphs').getContext('2d');
+      ctx.fillStyle = '#f2f2f2';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      for (let i = 0; i < 260; i++) {
+        const size = 10 + random() * 26;
+        ctx.globalAlpha = 0.03 + random() * 0.09;
+        ctx.font = `500 ${size}px "JetBrains Mono Variable", monospace`;
+        ctx.fillText(glyphs[Math.floor(random() * glyphs.length)], random() * 1200, random() * 630);
+      }
+      await document.fonts.ready;
+      document.body.dataset.ready = 'true';
+    </script>
+  </body>
+</html>

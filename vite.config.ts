@@ -12,10 +12,31 @@ function buildSha(): string {
   }
 }
 
+/**
+ * Absolute site address for link previews (og:image must be a full URL).
+ * SITE_URL wins if set; on Vercel the project's production domain is used, custom domain included.
+ * Locally it is empty, so the tags fall back to relative paths.
+ */
+function siteUrl(): string {
+  const explicit = process.env.SITE_URL;
+  if (explicit) return explicit.replace(/\/+$/, '');
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  return vercel ? `https://${vercel}` : '';
+}
+
 export default defineConfig({
   define: {
     __BUILD_SHA__: JSON.stringify(buildSha()),
   },
+  plugins: [
+    {
+      name: 'site-url',
+      transformIndexHtml: {
+        order: 'pre',
+        handler: (html) => html.replaceAll('%SITE_URL%', siteUrl()),
+      },
+    },
+  ],
   server: {
     port: 5173,
     strictPort: true,

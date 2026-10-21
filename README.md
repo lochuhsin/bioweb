@@ -41,6 +41,12 @@ Contact 頁下面可以放一個月曆，訪客自己選時間約 coffee chat �
 
 `calLink` 留空的活動不會顯示。兩個都留空時，正式網站上不會出現這個區塊，`npm run dev` 時則會顯示這段設定說明。網站切換亮暗主題時，月曆也會跟著換。
 
+## 分享縮圖（LinkedIn 等）
+
+貼網址到 LinkedIn、Slack 時顯示的縮圖是 `public/social-card.png`（1200×630），版面在 `social-card.html`。改完版面後，先開著 `npm run dev`，再執行 `npm run social-card` 重新產生（需要電腦上有 Google Chrome）。
+
+縮圖網址必須是完整網址。build 時會自動用 Vercel 的正式網域；如果縮圖沒出現，到 Vercel 專案的 Settings → Environment Variables 加一個 `SITE_URL`，值填你的網址（例如 `https://your-domain.com`），再重新部署。
+
 ## 檔案結構
 
 ```
